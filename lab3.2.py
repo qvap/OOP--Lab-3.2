@@ -20,16 +20,24 @@ class Model():
         return False
 
     def process_numbers(self): # Подгоняет все числа под правила
+        self.__a = round(self.__a / 10) * 10
+        self.__b = round(self.__b / 10) * 10
+        self.__c = round(self.__c / 10) * 10
+
         self.__a = self.__low_limit if self.__a < self.__low_limit else self.__a
+        self.__a = self.__up_limit if self.__a > self.__up_limit else self.__a
+
         self.__c = self.__up_limit if self.__c > self.__up_limit else self.__c
+        self.__c = self.__low_limit if self.__c < self.__low_limit else self.__c
+
         if not(self.__a <= self.__b <= self.__c):
             if self.__a > self.__b:
                 if self.__a > self.__c:
-                    self.__a = self.__c
+                    self.__c = self.__a
                 self.__b = self.__a
             if self.__c < self.__b:
                 if self.__a > self.__c:
-                    self.__c = self.__a
+                    self.__a = self.__c
                 self.__b = self.__c
         self.reset_numbers()
 
@@ -90,14 +98,17 @@ class Controller(ctk.CTkFrame):
 
         self.A_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.A_slider.grid(row=3, column=0, padx=15, pady=15, sticky="new")
+        self.A_slider.bind("<Button-1>", self.get_numbers)
         self.A_slider.bind("<B1-Motion>", self.get_numbers)
 
         self.B_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.B_slider.grid(row=3, column=1, padx=15, pady=15, sticky="new")
+        self.B_slider.bind("<Button-1>", self.get_numbers)
         self.B_slider.bind("<B1-Motion>", self.get_numbers)
 
         self.C_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.C_slider.grid(row=3, column=2, padx=15, pady=15, sticky="new")
+        self.C_slider.bind("<Button-1>", self.get_numbers)
         self.C_slider.bind("<B1-Motion>", self.get_numbers)
 
     def set_numbers(self, a: int, b: int, c: int): # Вставляет значения a, b, c в виджеты
