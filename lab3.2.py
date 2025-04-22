@@ -54,39 +54,48 @@ class Controller(ctk.CTkFrame):
 
         self.A_entry = ctk.CTkEntry(master=self, height=40, validate="all", validatecommand=(self.__valid, "%P"))
         self.A_entry.grid(row=1, column=0, padx=15, pady=15, sticky="new")
-        self.A_entry.bind("<Leave>", self.get_numbers)
+        self.A_entry.bind("<FocusOut>", self.get_numbers)
+        self.A_entry.bind("<Return>", self.get_numbers)
 
         self.B_entry = ctk.CTkEntry(master=self, height=40, validate="all", validatecommand=(self.__valid, "%P"))
         self.B_entry.grid(row=1, column=1, padx=15, pady=15, sticky="new")
-        self.B_entry.bind("<Leave>", self.get_numbers)
+        self.B_entry.bind("<FocusOut>", self.get_numbers)
+        self.B_entry.bind("<Return>", self.get_numbers)
 
         self.C_entry = ctk.CTkEntry(master=self, height=40, validate="all", validatecommand=(self.__valid, "%P"))
         self.C_entry.grid(row=1, column=2, padx=15, pady=15, sticky="new")
-        self.C_entry.bind("<Leave>", self.get_numbers)
+        self.C_entry.bind("<FocusOut>", self.get_numbers)
+        self.C_entry.bind("<Return>", self.get_numbers)
 
         self.A_spinbox = sb.Spinbox(master=self, width=150, step_size=10, validate_registration=self.__valid)
         self.A_spinbox.grid(row=2, column=0, padx=15, pady=15, sticky="new")
-        self.A_spinbox.bind("<Leave>", self.get_numbers)
+        self.A_spinbox.entry.bind("<FocusOut>", self.get_numbers)
+        self.A_spinbox.entry.bind("<Return>", self.get_numbers)
+        self.A_spinbox.add_button.bind("<Button-1>", self.get_numbers)
 
         self.B_spinbox = sb.Spinbox(master=self, width=150, step_size=10, validate_registration=self.__valid)
         self.B_spinbox.grid(row=2, column=1, padx=15, pady=15, sticky="new")
-        self.B_spinbox.bind("<Leave>", self.get_numbers)
+        self.B_spinbox.entry.bind("<FocusOut>", self.get_numbers)
+        self.B_spinbox.entry.bind("<Return>", self.get_numbers)
+        self.B_spinbox.add_button.bind("<Button-1>", self.get_numbers)
 
         self.C_spinbox = sb.Spinbox(master=self, width=150, step_size=10, validate_registration=self.__valid)
         self.C_spinbox.grid(row=2, column=2, padx=15, pady=15, sticky="new")
-        self.C_spinbox.bind("<Leave>", self.get_numbers)
+        self.C_spinbox.entry.bind("<FocusOut>", self.get_numbers)
+        self.C_spinbox.entry.bind("<Return>", self.get_numbers)
+        self.C_spinbox.add_button.bind("<Button-1>", self.get_numbers)
 
         self.A_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.A_slider.grid(row=3, column=0, padx=15, pady=15, sticky="new")
-        self.A_slider.bind("<Leave>", self.get_numbers)
+        self.A_slider.bind("<B1-Motion>", self.get_numbers)
 
         self.B_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.B_slider.grid(row=3, column=1, padx=15, pady=15, sticky="new")
-        self.B_slider.bind("<Leave>", self.get_numbers)
+        self.B_slider.bind("<B1-Motion>", self.get_numbers)
 
         self.C_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.C_slider.grid(row=3, column=2, padx=15, pady=15, sticky="new")
-        self.C_slider.bind("<Leave>", self.get_numbers)
+        self.C_slider.bind("<B1-Motion>", self.get_numbers)
 
     def set_numbers(self, a: int, b: int, c: int): # Вставляет значения a, b, c в виджеты
         self.A_entry.delete(0, END)

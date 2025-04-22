@@ -1,5 +1,5 @@
 import customtkinter
-from typing import Callable, Union
+from typing import Callable, Union, Optional
 
 class Spinbox(customtkinter.CTkFrame):
     def __init__(self, *args,
