@@ -121,7 +121,8 @@ class Controller(ctk.CTkFrame):
     def get_numbers(self, *args) -> None: # Получает значения a, b, c из виджетов и отправляет их на обработку в Model
 
         # Если какая либо строка удалена, восстанавливает значения
-        if "" in [self.A_entry.get(), self.B_entry.get(), self.C_entry.get()]:
+        if "" in [self.A_entry.get(), self.B_entry.get(), self.C_entry.get(), self.A_spinbox.entry.get(),
+                  self.B_spinbox.entry.get(), self.C_spinbox.entry.get()]:
             self.model.reset_numbers()
             return
         

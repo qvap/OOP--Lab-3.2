@@ -1,4 +1,5 @@
 import customtkinter
+from tkinter import END
 from typing import Callable, Union, Optional
 
 class Spinbox(customtkinter.CTkFrame):
@@ -37,7 +38,7 @@ class Spinbox(customtkinter.CTkFrame):
             self.command()
         try:
             value = int(self.entry.get()) + self.step_size
-            self.entry.delete(0, "end")
+            self.entry.delete(0, END)
             self.entry.insert(0, value)
         except ValueError:
             return
@@ -47,17 +48,14 @@ class Spinbox(customtkinter.CTkFrame):
             self.command()
         try:
             value = int(self.entry.get()) - self.step_size
-            self.entry.delete(0, "end")
+            self.entry.delete(0, END)
             self.entry.insert(0, value)
         except ValueError:
             return
 
-    def get(self) -> Union[int, None]:
-        try:
-            return int(self.entry.get())
-        except ValueError:
-            return None
+    def get(self) -> str:
+        return self.entry.get()
 
     def set(self, value: int):
-        self.entry.delete(0, "end")
-        self.entry.insert(0, str(int(value)))
+        self.entry.delete(0, END)
+        self.entry.insert(0, str(value))
