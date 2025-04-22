@@ -72,18 +72,21 @@ class Controller(ctk.CTkFrame):
         self.A_spinbox.entry.bind("<FocusOut>", self.get_numbers)
         self.A_spinbox.entry.bind("<Return>", self.get_numbers)
         self.A_spinbox.add_button.bind("<Button-1>", self.get_numbers)
+        self.A_spinbox.subtract_button.bind("<Button-1>", self.get_numbers)
 
         self.B_spinbox = sb.Spinbox(master=self, width=150, step_size=10, validate_registration=self.__valid)
         self.B_spinbox.grid(row=2, column=1, padx=15, pady=15, sticky="new")
         self.B_spinbox.entry.bind("<FocusOut>", self.get_numbers)
         self.B_spinbox.entry.bind("<Return>", self.get_numbers)
         self.B_spinbox.add_button.bind("<Button-1>", self.get_numbers)
+        self.B_spinbox.subtract_button.bind("<Button-1>", self.get_numbers)
 
         self.C_spinbox = sb.Spinbox(master=self, width=150, step_size=10, validate_registration=self.__valid)
         self.C_spinbox.grid(row=2, column=2, padx=15, pady=15, sticky="new")
         self.C_spinbox.entry.bind("<FocusOut>", self.get_numbers)
         self.C_spinbox.entry.bind("<Return>", self.get_numbers)
         self.C_spinbox.add_button.bind("<Button-1>", self.get_numbers)
+        self.C_spinbox.subtract_button.bind("<Button-1>", self.get_numbers)
 
         self.A_slider = ctk.CTkSlider(master=self, from_=0, to=100, number_of_steps=10)
         self.A_slider.grid(row=3, column=0, padx=15, pady=15, sticky="new")
