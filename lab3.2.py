@@ -5,26 +5,25 @@ import json
 import os
 
 class Model():
-    def __init__(self, show_numbers):
+    def __init__(self):
         self.__low_limit = 0
         self.__up_limit = 100
-        self.show_numbers = show_numbers
         self.settings_path = "settings.json"
-        if os.path.exists(self.settings_path):
+        if os.path.exists(self.settings_path): # Если файл существует, подгрузит значения из него
             with open(self.settings_path, "r") as f:
                 self.__a, self.__b, self.__c = json.load(f)
         else:
             self.__a, self.__b, self.__c = 0, 50, 100
 
-    def reset_numbers(self): # Вставляет значения из модели в виджеты
-        self.show_numbers(self.__a, self.__b, self.__c)
-
-    def check_numbers(self, a: int, b: int, c: int) -> bool: # Проверяет, изменились ли значения
-        if (self.__a, self.__b, self.__c) != (a, b, c):
-                self.__a, self.__b, self.__c = a, b, c
+    def start(self, numbers: list):
+        if len(numbers) != 3:
+            raise ValueError("Not valid amount of numbers")
+        if (self.__a, self.__b, self.__c) != numbers:
+                self.__a, self.__b, self.__c = numbers[0], numbers[1], numbers[2]
                 self.process_numbers()
-                return True
-        return False
+
+    def pass_numbers(self) -> list: # Возвращает значения из модели
+        return [self.__a, self.__b, self.__c]
 
     def process_numbers(self): # Подгоняет все числа под правила
         self.__a = self.__low_limit if self.__a < self.__low_limit else self.__a
@@ -42,26 +41,25 @@ class Model():
                 if self.__a > self.__c:
                     self.__a = self.__c
                 self.__b = self.__c
-        self.reset_numbers()
     
-    def __del__(self):
+    def __del__(self): # деструктор
         with open(self.settings_path, "w") as f:
             json.dump((self.__a, self.__b, self.__c), f)
 
 class Controller(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, model):
         super().__init__(master)
 
         self.rowconfigure((0,1,2,3), weight=1)
         self.columnconfigure((0,1,2), weight=1)
 
-        self.model = Model(self.set_numbers)
+        self.model = model
 
         self.__valid = self.register(self.__validate)
 
         self.__create_widgets()
 
-        self.model.reset_numbers()
+        self.set_numbers(self.model.pass_numbers())
    
     def __create_widgets(self): # Создание виджетов и подключение событий к функциям
         self.label = ctk.CTkLabel(master=self, text="A => B => C", fg_color="transparent", font=("Times New Roman", 95))
@@ -118,23 +116,23 @@ class Controller(ctk.CTkFrame):
         self.C_slider.bind("<Button-1>", self.get_numbers)
         self.C_slider.bind("<B1-Motion>", self.get_numbers)
 
-    def set_numbers(self, a: int, b: int, c: int): # Вставляет значения a, b, c в виджеты
+    def set_numbers(self, numbers: list): # Вставляет значения a, b, c в виджеты
         self.A_entry.delete(0, END)
-        self.A_entry.insert(0, str(a))
+        self.A_entry.insert(0, str(numbers[0]))
 
         self.B_entry.delete(0, END)
-        self.B_entry.insert(0, str(b))
+        self.B_entry.insert(0, str(numbers[1]))
 
         self.C_entry.delete(0, END)
-        self.C_entry.insert(0, str(c))
+        self.C_entry.insert(0, str(numbers[2]))
 
-        self.A_spinbox.set(a)
-        self.B_spinbox.set(b)
-        self.C_spinbox.set(c)
+        self.A_spinbox.set(numbers[0])
+        self.B_spinbox.set(numbers[1])
+        self.C_spinbox.set(numbers[2])
 
-        self.A_slider.set(a)
-        self.B_slider.set(b)
-        self.C_slider.set(c)
+        self.A_slider.set(numbers[0])
+        self.B_slider.set(numbers[1])
+        self.C_slider.set(numbers[2])
 
     def get_numbers(self, *args) -> None: # Получает значения a, b, c из виджетов и отправляет их на обработку в Model
 
@@ -157,7 +155,9 @@ class Controller(ctk.CTkFrame):
         unique_c = list(set(filter(lambda x: c.count(x) == 1, c)))
         final_c = unique_c[0] if len(unique_c) > 0 else c[0]
 
-        self.model.check_numbers(final_a, final_b, final_c)
+        self.model.start([final_a, final_b, final_c])
+
+        self.set_numbers(self.model.pass_numbers())
 
     def __validate(self, P: str): # Проверяет, что введённое значение является числом
         return str.isdigit(P) or P == "" or (P == ("-"+P[1:]) and str.isdigit(P[1:]))
@@ -172,13 +172,17 @@ class App(ctk.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.controller = Controller(master=self)
+        self.model = Model()
+
+        self.controller = Controller(master=self, model=self.model)
         self.controller.grid(row=0, column=0, sticky="nsew")
         
         self.protocol("WM_DELETE_WINDOW", self.on_close)
+
     def on_close(self):
-        self.controller.model.__del__()
+        self.model.__del__()
         self.destroy()
+
 if __name__ == "__main__":
     app = App()
     app.mainloop()
