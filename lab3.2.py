@@ -23,7 +23,7 @@ class Model():
                 self.process_numbers()
 
     def pass_numbers(self) -> list: # Возвращает значения из модели
-        return [self.__a, self.__b, self.__c]
+        return (self.__a, self.__b, self.__c)
 
     def process_numbers(self): # Подгоняет все числа под правила
         self.__a = self.__low_limit if self.__a < self.__low_limit else self.__a
