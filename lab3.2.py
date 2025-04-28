@@ -1,13 +1,20 @@
 import customtkinter as ctk
 from tkinter import END
 import spinbox as sb
+import json
+import os
 
 class Model():
     def __init__(self, show_numbers):
         self.__low_limit = 0
         self.__up_limit = 100
         self.show_numbers = show_numbers
-        self.__a, self.__b, self.__c = 0, 50, 100
+        self.settings_path = "settings.json"
+        if os.path.exists(self.settings_path):
+            with open(self.settings_path, "r") as f:
+                self.__a, self.__b, self.__c = json.load(f)
+        else:
+            self.__a, self.__b, self.__c = 0, 50, 100
 
     def reset_numbers(self): # Вставляет значения из модели в виджеты
         self.show_numbers(self.__a, self.__b, self.__c)
@@ -36,6 +43,10 @@ class Model():
                     self.__a = self.__c
                 self.__b = self.__c
         self.reset_numbers()
+    
+    def __del__(self):
+        with open(self.settings_path, "w") as f:
+            json.dump((self.__a, self.__b, self.__c), f)
 
 class Controller(ctk.CTkFrame):
     def __init__(self, master):
@@ -164,6 +175,10 @@ class App(ctk.CTk):
         self.controller = Controller(master=self)
         self.controller.grid(row=0, column=0, sticky="nsew")
         
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
+    def on_close(self):
+        self.controller.model.__del__()
+        self.destroy()
 if __name__ == "__main__":
     app = App()
     app.mainloop()
