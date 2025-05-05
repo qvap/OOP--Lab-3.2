@@ -62,7 +62,7 @@ class Controller(ctk.CTkFrame):
         self.set_numbers(self.model.pass_numbers())
    
     def __create_widgets(self): # Создание виджетов и подключение событий к функциям
-        self.label = ctk.CTkLabel(master=self, text="A => B => C", fg_color="transparent", font=("Times New Roman", 95))
+        self.label = ctk.CTkLabel(master=self, text="A <= B <= C", fg_color="transparent", font=("Times New Roman", 95))
         self.label.grid(row=0, column=0, sticky="nsew", columnspan=3)
 
         self.A_entry = ctk.CTkEntry(master=self, height=40, validate="all", validatecommand=(self.__valid, "%P"))
